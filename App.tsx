@@ -9,6 +9,7 @@ import { Footer } from './components/Footer';
 import { ServiceDetail } from './components/ServiceDetail';
 import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { TermsConditions } from './components/TermsConditions';
+import { AIChat } from './components/AIChat';
 
 function AppContent() {
   const { currentPage } = useNavigation();
@@ -52,6 +53,9 @@ function AppContent() {
       </main>
 
       {(currentPage !== 'privacy-policy' && currentPage !== 'terms-conditions') && <Footer />}
+      
+      {/* AI Chat Widget */}
+      <AIChat />
     </div>
   );
 }

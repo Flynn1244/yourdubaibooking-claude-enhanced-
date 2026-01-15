@@ -53,7 +53,11 @@ export const AIChat: React.FC = () => {
               <Sparkles size={16} className="text-luxury-gold" />
               <span className="text-white font-serif text-sm tracking-wider">Q | Private Concierge</span>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+            <button 
+              onClick={() => setIsOpen(false)} 
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="Close chat"
+            >
               <X size={18} />
             </button>
           </div>
@@ -61,7 +65,7 @@ export const AIChat: React.FC = () => {
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
             {messages.map((msg, idx) => (
-              <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div key={`msg-${idx}-${msg.role}`} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div 
                   className={`max-w-[80%] p-3 rounded-lg text-sm leading-relaxed ${
                     msg.role === 'user' 
@@ -108,6 +112,8 @@ export const AIChat: React.FC = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="group relative flex items-center justify-center w-14 h-14 rounded-full bg-luxury-black text-white shadow-2xl hover:bg-luxury-gold transition-all duration-300"
+        aria-label={isOpen ? "Close chat" : "Open chat"}
+        aria-expanded={isOpen}
       >
         <div className="absolute inset-0 rounded-full border border-white/20 animate-ping opacity-20 group-hover:opacity-0" />
         {isOpen ? <X size={24} /> : <MessageSquare size={24} />}

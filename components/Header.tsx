@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useNavigation } from '../context/NavigationContext';
 
-export const Header: React.FC = () => {
+export const Header: React.FC = React.memo(() => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { currentPage, navigateToHome } = useNavigation();
@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
 
@@ -32,7 +32,7 @@ export const Header: React.FC = () => {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  };
+  }, [currentPage, navigateToHome]);
 
   return (
     <header
@@ -44,7 +44,19 @@ export const Header: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
-        <div className="cursor-pointer" onClick={navigateToHome}>
+        <div 
+          className="cursor-pointer" 
+          onClick={navigateToHome}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              navigateToHome();
+            }
+          }}
+          aria-label="Navigate to home"
+        >
           <img 
             src="/logo.png" 
             alt="Your Dubai Booking" 
@@ -79,8 +91,10 @@ export const Header: React.FC = () => {
 
         {/* Mobile Toggle */}
         <button 
-          className="md:block text-white"
+          className="md:hidden text-white"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle mobile menu"
+          aria-expanded={isMobileMenuOpen}
         >
           {isMobileMenuOpen ? <X /> : <Menu />}
         </button>
@@ -114,4 +128,6 @@ export const Header: React.FC = () => {
       )}
     </header>
   );
-};
+});
+
+Header.displayName = 'Header';

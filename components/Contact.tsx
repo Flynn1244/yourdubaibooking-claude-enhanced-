@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Reveal } from './ui/Reveal';
 import { FormStatus } from '../types';
 
-export const Contact: React.FC = () => {
+export const Contact: React.FC = React.memo(() => {
   const [status, setStatus] = useState<FormStatus>(FormStatus.IDLE);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus(FormStatus.SUBMITTING);
-    // Simulate submission
-    setTimeout(() => {
+    
+    const formData = new FormData(e.currentTarget);
+    const formObject = {
+      name: formData.get('name') as string,
+      phone: formData.get('phone') as string,
+      message: formData.get('message') as string,
+    };
+
+    try {
+      // TODO: Replace with actual API endpoint
+      // For now, simulate submission
+      await new Promise(resolve => setTimeout(resolve, 1500));
       setStatus(FormStatus.SUCCESS);
-    }, 1500);
+      
+      // Reset form
+      e.currentTarget.reset();
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setStatus(FormStatus.ERROR);
+    }
   };
 
   return (
@@ -32,32 +48,64 @@ export const Contact: React.FC = () => {
         </div>
 
         {status === FormStatus.SUCCESS ? (
-          <div className="bg-white p-8 border border-green-200 text-center animate-fade-in-up">
+          <div className="bg-white p-8 border border-green-200 text-center animate-fade-in-up" role="alert">
             <h3 className="font-serif text-2xl mb-2 text-green-800">Enquiry Received</h3>
             <p className="text-gray-600">Our concierge team will be in touch via WhatsApp shortly.</p>
+          </div>
+        ) : status === FormStatus.ERROR ? (
+          <div className="bg-white p-8 border border-red-200 text-center animate-fade-in-up" role="alert">
+            <h3 className="font-serif text-2xl mb-2 text-red-800">Error</h3>
+            <p className="text-gray-600">There was an error sending your message. Please try again.</p>
+            <button
+              onClick={() => setStatus(FormStatus.IDLE)}
+              className="mt-4 text-luxury-black hover:text-luxury-gold underline"
+            >
+              Try Again
+            </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-8">
              {/* Full Name */}
              <div className="border-b border-gray-400 py-2">
-                <input type="text" placeholder="Full name *" required className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm" />
+                <input 
+                  type="text" 
+                  name="name"
+                  placeholder="Full name *" 
+                  required 
+                  className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm"
+                  aria-label="Full name"
+                />
              </div>
 
              {/* WhatsApp Number */}
              <div className="border-b border-gray-400 py-2">
-                <input type="tel" placeholder="WhatsApp number *" required className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm" />
+                <input 
+                  type="tel" 
+                  name="phone"
+                  placeholder="WhatsApp number *" 
+                  required 
+                  className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm"
+                  aria-label="WhatsApp number"
+                />
              </div>
 
              {/* Message */}
              <div className="border-b border-gray-400 py-2">
-               <textarea rows={4} placeholder="Tell us what you're looking for in Dubai..." className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm resize-none" required></textarea>
+               <textarea 
+                 rows={4} 
+                 name="message"
+                 placeholder="Tell us what you're looking for in Dubai..." 
+                 className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm resize-none" 
+                 required
+                 aria-label="Message"
+               ></textarea>
              </div>
 
              <div className="pt-8 text-center">
                <button 
                 type="submit" 
                 disabled={status === FormStatus.SUBMITTING}
-                className="bg-luxury-black text-white px-12 py-4 text-xs uppercase tracking-[0.2em] hover:bg-luxury-gold transition-colors duration-300 disabled:opacity-50"
+                className="bg-luxury-black text-white px-12 py-4 text-xs uppercase tracking-[0.2em] hover:bg-luxury-gold transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                >
                  {status === FormStatus.SUBMITTING ? 'Sending...' : 'Send Message'}
                </button>
@@ -67,4 +115,6 @@ export const Contact: React.FC = () => {
       </div>
     </section>
   );
-};
+});
+
+Contact.displayName = 'Contact';

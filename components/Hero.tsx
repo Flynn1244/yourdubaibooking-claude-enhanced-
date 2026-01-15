@@ -1,7 +1,7 @@
 import React from 'react';
 import { Reveal } from './ui/Reveal';
 
-export const Hero: React.FC = () => {
+export const Hero: React.FC = React.memo(() => {
   const scrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const element = document.getElementById('contact');
@@ -51,4 +51,6 @@ export const Hero: React.FC = () => {
       </div>
     </section>
   );
-};
+});
+
+Hero.displayName = 'Hero';
