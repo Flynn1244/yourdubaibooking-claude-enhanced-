@@ -17,9 +17,16 @@ export const Footer: React.FC = () => {
           <div className="mb-12 md:mb-0">
              <div className="mb-6">
                 <img 
-                  src="/logo.png" 
+                  src="/logo.svg" 
                   alt="Your Dubai Booking" 
                   className="h-20 w-auto object-contain brightness-0 invert opacity-90" 
+                  onError={(e) => {
+                    // Fallback to PNG if SVG fails
+                    const target = e.target as HTMLImageElement;
+                    if (target.src.endsWith('.svg')) {
+                      target.src = '/logo.png';
+                    }
+                  }}
                 />
             </div>
             <p className="text-xs text-gray-500 mb-6 uppercase tracking-wider">Find us on social</p>

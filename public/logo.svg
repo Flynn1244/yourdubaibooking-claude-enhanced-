@@ -1,0 +1,31 @@
+<svg width="240" height="140" viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg">
+  <!-- Broken Circle Outline (segmented) -->
+  <path d="M 120 20 A 30 30 0 0 1 140 35" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 140 35 A 30 30 0 0 1 140 55" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 140 55 A 30 30 0 0 1 120 70" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 120 70 A 30 30 0 0 1 100 55" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 100 55 A 30 30 0 0 1 100 35" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 100 35 A 30 30 0 0 1 120 20" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"/>
+  
+  <!-- Palm Tree Trunk (thick, tapering downward) -->
+  <path d="M 120 45 L 115 70 L 125 70 Z" fill="black"/>
+  <rect x="118" y="45" width="4" height="25" fill="black" rx="1"/>
+  
+  <!-- Palm Fronds (radiating outward) -->
+  <path d="M 120 45 Q 105 40 95 30" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 120 45 Q 110 35 105 25" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 120 45 Q 115 30 120 20" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 120 45 Q 125 30 130 20" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 120 45 Q 130 35 135 25" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 120 45 Q 135 40 145 30" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  
+  <!-- Bottom curved shapes (horn-like/wave-like) -->
+  <path d="M 115 70 Q 110 75 105 80" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 125 70 Q 130 75 135 80" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  
+  <!-- Text: YOUR DUBAI -->
+  <text x="120" y="100" font-family="'Playfair Display', serif" font-size="16" font-weight="600" text-anchor="middle" fill="black" letter-spacing="1">YOUR DUBAI</text>
+  
+  <!-- Text: BOOKING -->
+  <text x="120" y="120" font-family="'Playfair Display', serif" font-size="16" font-weight="600" text-anchor="middle" fill="black" letter-spacing="1">BOOKING</text>
+</svg>
