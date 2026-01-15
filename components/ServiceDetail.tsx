@@ -56,4 +56,50 @@ export const ServiceDetail: React.FC = () => {
           {/* Main Description */}
           <div className={`flex-1 ${service.id === 'desert-safari' ? 'max-w-5xl' : ''}`}>
             <Reveal delay={200}>
-              <h2 className="text-luxury
+              <h2 className="text-luxury-gold font-serif text-3xl md:text-4xl mb-8">Overview</h2>
+              <div className="space-y-6 mb-12">
+                {service.longDescription.map((para, idx) => (
+                  <p key={idx} className="text-gray-300 leading-relaxed text-sm md:text-base">
+                    {para}
+                  </p>
+                ))}
+              </div>
+
+              {/* Packages Section */}
+              {service.packages && service.packages.length > 0 && (
+                <div className="mt-12">
+                  <h3 className="text-white font-serif text-2xl md:text-3xl mb-8">Packages</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {service.packages.map((pkg, idx) => (
+                      <div key={idx} className="border border-white/10 bg-white/5 p-6 rounded-lg hover:border-luxury-gold/50 transition-colors">
+                        <h4 className="text-luxury-gold font-serif text-xl mb-4">{pkg.name}</h4>
+                        <ul className="space-y-3">
+                          {pkg.features.map((feature, featureIdx) => (
+                            <li key={featureIdx} className="flex items-start gap-3 text-gray-300 text-sm">
+                              <Check size={18} className="text-luxury-gold flex-shrink-0 mt-0.5" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Price Section */}
+              {service.price && service.price.trim() !== '' && (
+                <div className="mt-8 pt-8 border-t border-white/10">
+                  <p className="text-luxury-gold font-serif text-lg md:text-xl">{service.price}</p>
+                </div>
+              )}
+            </Reveal>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact Section */}
+      <Contact />
+    </div>
+  );
+};
