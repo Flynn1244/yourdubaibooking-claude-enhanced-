@@ -1,0 +1,9 @@
+/* Base styles - minimal, most styling handled by Tailwind */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+}

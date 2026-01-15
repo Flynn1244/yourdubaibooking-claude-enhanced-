@@ -1,15 +1,26 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Initialize the client with proper API key handling
-const getApiKey = (): string => {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY || process.env.API_KEY;
-  if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not configured. Please set it in your .env.local file.");
-  }
-  return apiKey;
+// Lazy initialization - only create client when needed
+let aiInstance: GoogleGenAI | null = null;
+
+const getApiKey = (): string | null => {
+  return import.meta.env.VITE_GEMINI_API_KEY || 
+         import.meta.env.GEMINI_API_KEY || 
+         process.env.GEMINI_API_KEY || 
+         process.env.API_KEY || 
+         null;
 };
 
-const ai = new GoogleGenAI({ apiKey: getApiKey() });
+const getAIInstance = (): GoogleGenAI => {
+  if (!aiInstance) {
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not configured. Please set it in your .env.local file.");
+    }
+    aiInstance = new GoogleGenAI({ apiKey });
+  }
+  return aiInstance;
+};
 
 const SYSTEM_INSTRUCTION = `
 You are "Q", the digital concierge for Your Dubai Booking, a high-end luxury travel and lifestyle management service.
@@ -35,6 +46,9 @@ export const sendConciergeMessage = async (
     }
 
     const model = 'gemini-1.5-flash'; // Using stable model name
+    
+    // Get AI instance (lazy initialization)
+    const ai = getAIInstance();
     
     // Create chat with system instruction and history
     const chat = ai.chats.create({
