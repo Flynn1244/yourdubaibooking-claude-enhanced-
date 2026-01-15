@@ -14,12 +14,16 @@ export const Hero: React.FC = React.memo(() => {
     <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
       {/* Background with slight parallax or pan */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/40 z-10" />
-        <img 
-          src="https://images.unsplash.com/photo-1512453979798-5ea904ac66de?q=80&w=2000&auto=format&fit=crop"
-          alt="Luxury Destination Palm Jumeirah"
-          className="w-full h-full object-cover animate-slow-pan opacity-80"
-        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/50 z-10" />
+        <picture>
+          <source srcSet="/hero-palm-jumeirah.jpg" type="image/jpeg" />
+          <img 
+            src="https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=2400&auto=format&fit=crop"
+            alt="Aerial panoramic view of Palm Jumeirah, Dubai - Luxury destination with turquoise waters, golden sunset sky, and Dubai skyline"
+            className="w-full h-full object-cover animate-slow-pan opacity-90"
+            loading="eager"
+          />
+        </picture>
         {/* Animated grain or texture overlay can go here */}
       </div>
 
