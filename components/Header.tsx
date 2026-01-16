@@ -58,14 +58,14 @@ export const Header: React.FC = React.memo(() => {
           aria-label="Navigate to home"
         >
           <img 
-            src="/logo.svg" 
+            src="/logo.png" 
             alt="Your Dubai Booking" 
-            className="h-12 w-auto object-contain brightness-0 invert hover:opacity-80 transition-opacity" 
+            className="h-12 w-auto object-contain hover:opacity-80 transition-opacity" 
             onError={(e) => {
-              // Fallback to PNG if SVG fails
+              // Fallback to SVG if PNG fails
               const target = e.target as HTMLImageElement;
-              if (target.src.endsWith('.svg')) {
-                target.src = '/logo.png';
+              if (target.src.endsWith('.png')) {
+                target.src = '/logo.svg';
               }
             }}
           />
