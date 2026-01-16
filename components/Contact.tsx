@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import emailjs from '@emailjs/browser';
 import { Reveal } from './ui/Reveal';
 import { FormStatus } from '../types';
 
@@ -16,74 +15,46 @@ export const Contact: React.FC = React.memo(() => {
     const message = formData.get('message') as string;
 
     try {
-      // Use EmailJS to send email
-      // Initialize EmailJS with your public key (set in environment variable)
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || process.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || process.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || process.env.VITE_EMAILJS_PUBLIC_KEY;
+      // Use Web3Forms to send email directly to contact@yourdubaibooking.com
+      // Get access key from environment variable or use default
+      const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 
+                          process.env.VITE_WEB3FORMS_ACCESS_KEY;
 
-      let emailSent = false;
+      if (web3formsKey) {
+        // Use Web3Forms if key is configured
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            access_key: web3formsKey,
+            subject: `New Enquiry from ${name} - Your Dubai Booking`,
+            from_name: name,
+            email: 'contact@yourdubaibooking.com',
+            phone: phone,
+            message: `Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`,
+          }),
+        });
 
-      if (serviceId && templateId && publicKey) {
-        // Send via EmailJS if configured
-        try {
-          await emailjs.send(
-            serviceId,
-            templateId,
-            {
-              to_email: 'contact@yourdubaibooking.com',
-              from_name: name,
-              from_phone: phone,
-              message: message,
-              reply_to: phone,
-            },
-            publicKey
-          );
-          emailSent = true;
-        } catch (emailjsError) {
-          console.error('EmailJS error:', emailjsError);
-          // Continue to fallback
+        const result = await response.json();
+        
+        if (result.success) {
+          setStatus(FormStatus.SUCCESS);
+          e.currentTarget.reset();
+          return;
         }
       }
 
-      // Fallback: Try serverless function if EmailJS not configured or failed
-      if (!emailSent) {
-        try {
-          const response = await fetch('/api/send-email', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, phone, message }),
-          });
-
-          if (response.ok) {
-            emailSent = true;
-          } else {
-            // If API returns error, check if it's a configuration issue
-            const errorData = await response.json().catch(() => ({}));
-            if (errorData.error === 'Email service not configured') {
-              // Use mailto fallback for configuration issues
-              throw new Error('Use mailto fallback');
-            }
-            throw new Error('API request failed');
-          }
-        } catch (apiError) {
-          // Final fallback: Use mailto link
-          const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=${encodeURIComponent(`New Enquiry from ${name} - Your Dubai Booking`)}&body=${encodeURIComponent(`Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
-          window.location.href = mailtoLink;
-          // Show success since mailto was triggered (user's email client will open)
-          emailSent = true;
-        }
-      }
-
-      if (emailSent) {
-        setStatus(FormStatus.SUCCESS);
-        // Reset form
-        e.currentTarget.reset();
-      } else {
-        throw new Error('Failed to send email');
-      }
+      // Fallback: Use mailto if Web3Forms not configured
+      // This works immediately but opens user's email client
+      const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=${encodeURIComponent(`New Enquiry from ${name} - Your Dubai Booking`)}&body=${encodeURIComponent(`Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
+      window.location.href = mailtoLink;
+      
+      // Show success message
+      setStatus(FormStatus.SUCCESS);
+      e.currentTarget.reset();
+      
     } catch (error) {
       console.error('Form submission error:', error);
       setStatus(FormStatus.ERROR);
