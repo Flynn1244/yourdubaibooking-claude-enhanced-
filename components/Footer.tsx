@@ -19,7 +19,14 @@ export const Footer: React.FC = () => {
                 <img 
                   src="/logo.png" 
                   alt="Your Dubai Booking" 
-                  className="h-20 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" 
+                  className="h-20 w-auto object-contain opacity-90" 
+                  onError={(e) => {
+                    // Fallback to SVG if PNG fails
+                    const target = e.target as HTMLImageElement;
+                    if (target.src.endsWith('.png')) {
+                      target.src = '/logo.svg';
+                    }
+                  }}
                 />
             </div>
             <p className="text-xs text-gray-500 mb-6 uppercase tracking-wider">Find us on social</p>
