@@ -17,14 +17,14 @@ export const Footer: React.FC = () => {
           <div className="mb-12 md:mb-0">
              <div className="mb-6">
                 <img 
-                  src="/logo.png" 
+                  src="/logo.svg" 
                   alt="Your Dubai Booking" 
                   className="h-20 w-auto object-contain opacity-90" 
                   onError={(e) => {
-                    // Fallback to SVG if PNG fails
+                    // Fallback to PNG if SVG fails
                     const target = e.target as HTMLImageElement;
-                    if (target.src.endsWith('.png')) {
-                      target.src = '/logo.svg';
+                    if (target.src.endsWith('.svg')) {
+                      target.src = '/logo.png';
                     }
                   }}
                 />
