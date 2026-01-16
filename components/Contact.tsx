@@ -22,8 +22,32 @@ export const Contact: React.FC = React.memo(() => {
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || process.env.VITE_EMAILJS_TEMPLATE_ID;
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || process.env.VITE_EMAILJS_PUBLIC_KEY;
 
-      if (!serviceId || !templateId || !publicKey) {
-        // Fallback: Use serverless function if EmailJS not configured
+      let emailSent = false;
+
+      if (serviceId && templateId && publicKey) {
+        // Send via EmailJS if configured
+        try {
+          await emailjs.send(
+            serviceId,
+            templateId,
+            {
+              to_email: 'contact@yourdubaibooking.com',
+              from_name: name,
+              from_phone: phone,
+              message: message,
+              reply_to: phone,
+            },
+            publicKey
+          );
+          emailSent = true;
+        } catch (emailjsError) {
+          console.error('EmailJS error:', emailjsError);
+          // Continue to fallback
+        }
+      }
+
+      // Fallback: Try serverless function if EmailJS not configured or failed
+      if (!emailSent) {
         try {
           const response = await fetch('/api/send-email', {
             method: 'POST',
@@ -33,35 +57,33 @@ export const Contact: React.FC = React.memo(() => {
             body: JSON.stringify({ name, phone, message }),
           });
 
-          if (!response.ok) {
-            throw new Error('Failed to send email');
+          if (response.ok) {
+            emailSent = true;
+          } else {
+            // If API returns error, check if it's a configuration issue
+            const errorData = await response.json().catch(() => ({}));
+            if (errorData.error === 'Email service not configured') {
+              // Use mailto fallback for configuration issues
+              throw new Error('Use mailto fallback');
+            }
+            throw new Error('API request failed');
           }
         } catch (apiError) {
-          // If API fails, use mailto as last resort
-          const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=New Enquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
+          // Final fallback: Use mailto link
+          const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=${encodeURIComponent(`New Enquiry from ${name} - Your Dubai Booking`)}&body=${encodeURIComponent(`Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
           window.location.href = mailtoLink;
-          // Still show success since mailto was triggered
+          // Show success since mailto was triggered (user's email client will open)
+          emailSent = true;
         }
-      } else {
-        // Send via EmailJS
-        await emailjs.send(
-          serviceId,
-          templateId,
-          {
-            to_email: 'contact@yourdubaibooking.com',
-            from_name: name,
-            from_phone: phone,
-            message: message,
-            reply_to: phone,
-          },
-          publicKey
-        );
       }
 
-      setStatus(FormStatus.SUCCESS);
-      
-      // Reset form
-      e.currentTarget.reset();
+      if (emailSent) {
+        setStatus(FormStatus.SUCCESS);
+        // Reset form
+        e.currentTarget.reset();
+      } else {
+        throw new Error('Failed to send email');
+      }
     } catch (error) {
       console.error('Form submission error:', error);
       setStatus(FormStatus.ERROR);
