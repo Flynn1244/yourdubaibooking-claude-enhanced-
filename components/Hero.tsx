@@ -15,15 +15,19 @@ export const Hero: React.FC = React.memo(() => {
       {/* Background with slight parallax or pan */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/50 z-10" />
-        <picture>
-          <source srcSet="/hero-palm-jumeirah.jpg" type="image/jpeg" />
-          <img 
-            src="https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=2400&auto=format&fit=crop"
-            alt="Aerial panoramic view of Palm Jumeirah, Dubai - Luxury destination with turquoise waters, golden sunset sky, and Dubai skyline"
-            className="w-full h-full object-cover animate-slow-pan opacity-90"
-            loading="eager"
-          />
-        </picture>
+        <img 
+          src="/hero-palm-jumirah.jpg"
+          alt="Aerial panoramic view of Palm Jumeirah, Dubai - Luxury destination with turquoise waters, golden sunset sky, and Dubai skyline"
+          className="w-full h-full object-cover animate-slow-pan opacity-90"
+          loading="eager"
+          onError={(e) => {
+            // Fallback to Unsplash if local image fails
+            const target = e.target as HTMLImageElement;
+            if (target.src.includes('hero-palm-jumirah')) {
+              target.src = 'https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=2400&auto=format&fit=crop';
+            }
+          }}
+        />
         {/* Animated grain or texture overlay can go here */}
       </div>
 
