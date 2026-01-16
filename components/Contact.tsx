@@ -17,7 +17,7 @@ export const Contact: React.FC = React.memo(() => {
     try {
       // Use FormSubmit - works immediately, no backend needed
       // Sends email directly to contact@yourdubaibooking.com
-      const response = await fetch('https://formsubmit.co/ajax/contact@yourdubaibooking.com', {
+      const response = await fetch('https://formsubmit.co/ajax/39be9e11af02014961dbe7d13105944b', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
