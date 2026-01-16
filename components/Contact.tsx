@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import { Reveal } from './ui/Reveal';
 import { FormStatus } from '../types';
 
@@ -10,16 +11,53 @@ export const Contact: React.FC = React.memo(() => {
     setStatus(FormStatus.SUBMITTING);
     
     const formData = new FormData(e.currentTarget);
-    const formObject = {
-      name: formData.get('name') as string,
-      phone: formData.get('phone') as string,
-      message: formData.get('message') as string,
-    };
+    const name = formData.get('name') as string;
+    const phone = formData.get('phone') as string;
+    const message = formData.get('message') as string;
 
     try {
-      // TODO: Replace with actual API endpoint
-      // For now, simulate submission
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Use EmailJS to send email
+      // Initialize EmailJS with your public key (set in environment variable)
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || process.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || process.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || process.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      if (!serviceId || !templateId || !publicKey) {
+        // Fallback: Use serverless function if EmailJS not configured
+        try {
+          const response = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, phone, message }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to send email');
+          }
+        } catch (apiError) {
+          // If API fails, use mailto as last resort
+          const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=New Enquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
+          window.location.href = mailtoLink;
+          // Still show success since mailto was triggered
+        }
+      } else {
+        // Send via EmailJS
+        await emailjs.send(
+          serviceId,
+          templateId,
+          {
+            to_email: 'contact@yourdubaibooking.com',
+            from_name: name,
+            from_phone: phone,
+            message: message,
+            reply_to: phone,
+          },
+          publicKey
+        );
+      }
+
       setStatus(FormStatus.SUCCESS);
       
       // Reset form
