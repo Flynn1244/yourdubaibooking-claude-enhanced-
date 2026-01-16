@@ -15,49 +15,74 @@ export const Contact: React.FC = React.memo(() => {
     const message = formData.get('message') as string;
 
     try {
-      // Use Web3Forms to send email directly to contact@yourdubaibooking.com
-      // Get access key from environment variable or use default
-      const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 
-                          process.env.VITE_WEB3FORMS_ACCESS_KEY;
+      // Use FormSubmit - works immediately, no backend needed
+      // Sends email directly to contact@yourdubaibooking.com
+      const response = await fetch('https://formsubmit.co/ajax/contact@yourdubaibooking.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          phone: phone,
+          message: message,
+          _subject: `New Enquiry from ${name} - Your Dubai Booking`,
+          _template: 'table',
+          _captcha: false,
+        }),
+      });
 
-      if (web3formsKey) {
-        // Use Web3Forms if key is configured
-        const response = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            access_key: web3formsKey,
-            subject: `New Enquiry from ${name} - Your Dubai Booking`,
-            from_name: name,
-            email: 'contact@yourdubaibooking.com',
-            phone: phone,
-            message: `Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`,
-          }),
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-          setStatus(FormStatus.SUCCESS);
-          e.currentTarget.reset();
-          return;
-        }
-      }
-
-      // Fallback: Use mailto if Web3Forms not configured
-      // This works immediately but opens user's email client
-      const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=${encodeURIComponent(`New Enquiry from ${name} - Your Dubai Booking`)}&body=${encodeURIComponent(`Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
-      window.location.href = mailtoLink;
+      const result = await response.json();
       
-      // Show success message
-      setStatus(FormStatus.SUCCESS);
-      e.currentTarget.reset();
+      if (response.ok && result.success) {
+        setStatus(FormStatus.SUCCESS);
+        e.currentTarget.reset();
+      } else {
+        throw new Error(result.message || 'Failed to send email');
+      }
       
     } catch (error) {
       console.error('Form submission error:', error);
-      setStatus(FormStatus.ERROR);
+      
+      // Fallback: Try Web3Forms if access key is available
+      const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 
+                          process.env.VITE_WEB3FORMS_ACCESS_KEY;
+      
+      if (web3formsKey) {
+        try {
+          const web3Response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              access_key: web3formsKey,
+              subject: `New Enquiry from ${name} - Your Dubai Booking`,
+              from_name: name,
+              email: 'contact@yourdubaibooking.com',
+              phone: phone,
+              message: `Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`,
+            }),
+          });
+
+          const web3Result = await web3Response.json();
+          
+          if (web3Result.success) {
+            setStatus(FormStatus.SUCCESS);
+            e.currentTarget.reset();
+            return;
+          }
+        } catch (web3Error) {
+          console.error('Web3Forms error:', web3Error);
+        }
+      }
+      
+      // Final fallback: Use mailto
+      const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=${encodeURIComponent(`New Enquiry from ${name} - Your Dubai Booking`)}&body=${encodeURIComponent(`Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
+      window.location.href = mailtoLink;
+      setStatus(FormStatus.SUCCESS);
+      e.currentTarget.reset();
     }
   };
 
