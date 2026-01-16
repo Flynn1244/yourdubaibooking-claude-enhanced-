@@ -11,6 +11,7 @@ export const Contact: React.FC = React.memo(() => {
     
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
     const message = formData.get('message') as string;
 
@@ -25,6 +26,7 @@ export const Contact: React.FC = React.memo(() => {
         },
         body: JSON.stringify({
           name: name,
+          email: email,
           phone: phone,
           message: message,
           _subject: `New Enquiry from ${name} - Your Dubai Booking`,
@@ -60,9 +62,10 @@ export const Contact: React.FC = React.memo(() => {
               access_key: web3formsKey,
               subject: `New Enquiry from ${name} - Your Dubai Booking`,
               from_name: name,
+              from_email: email,
               email: 'contact@yourdubaibooking.com',
               phone: phone,
-              message: `Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`,
+              message: `Name: ${name}\nEmail: ${email}\nWhatsApp: ${phone}\n\nMessage:\n${message}`,
             }),
           });
 
@@ -79,7 +82,7 @@ export const Contact: React.FC = React.memo(() => {
       }
       
       // Final fallback: Use mailto
-      const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=${encodeURIComponent(`New Enquiry from ${name} - Your Dubai Booking`)}&body=${encodeURIComponent(`Name: ${name}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
+      const mailtoLink = `mailto:contact@yourdubaibooking.com?subject=${encodeURIComponent(`New Enquiry from ${name} - Your Dubai Booking`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\nWhatsApp: ${phone}\n\nMessage:\n${message}`)}`;
       window.location.href = mailtoLink;
       setStatus(FormStatus.SUCCESS);
       e.currentTarget.reset();
@@ -130,6 +133,18 @@ export const Contact: React.FC = React.memo(() => {
                   required 
                   className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm text-black"
                   aria-label="Full name"
+                />
+             </div>
+
+             {/* Email */}
+             <div className="border-b border-gray-400 py-2">
+                <input 
+                  type="email" 
+                  name="email"
+                  placeholder="Email address *" 
+                  required 
+                  className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm text-black"
+                  aria-label="Email address"
                 />
              </div>
 
