@@ -110,7 +110,7 @@ export const Contact: React.FC = React.memo(() => {
                   name="name"
                   placeholder="Full name *" 
                   required 
-                  className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm"
+                  className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm text-black"
                   aria-label="Full name"
                 />
              </div>
@@ -122,7 +122,7 @@ export const Contact: React.FC = React.memo(() => {
                   name="phone"
                   placeholder="WhatsApp number *" 
                   required 
-                  className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm"
+                  className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm text-black"
                   aria-label="WhatsApp number"
                 />
              </div>
@@ -133,7 +133,7 @@ export const Contact: React.FC = React.memo(() => {
                  rows={4} 
                  name="message"
                  placeholder="Tell us what you're looking for in Dubai..." 
-                 className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm resize-none" 
+                 className="w-full bg-transparent border-none focus:ring-0 placeholder-gray-500 text-sm resize-none text-black" 
                  required
                  aria-label="Message"
                ></textarea>
