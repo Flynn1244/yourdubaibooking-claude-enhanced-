@@ -7,32 +7,10 @@ export const servicesData: ServiceItem[] = [
     shortDescription: "Experience the magic of the Arabian dunes with options ranging from spirited adventure to ultra-luxury private escapes.",
     longDescription: [
       "The Arabian Desert is a place of serene beauty and timeless mystery. Just a short drive from the skyscrapers of Dubai, the golden dunes offer a complete escape from the city's pace. Whether you seek adrenaline-pumping adventure or a peaceful evening under the stars, the desert provides a backdrop for unforgettable memories.",
-      "We offer two distinct ways to experience this majestic landscape, tailored to your preferences for privacy, comfort, and exclusivity. Choose the experience that suits your style below."
+      "Check availability and book your desert safari experience below."
     ],
-    price: "Standard: AED 350 | VIP: AED 1,500",
+    price: "",
     image: "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=2070&auto=format&fit=crop",
-    packages: [
-      {
-        name: "Budget Safari",
-        features: [
-          "Morning or afternoon experience options",
-          "Shared dune bashing adventure",
-          "Traditional camel ride included",
-          "Sandboarding on the dunes",
-          "Basic desert camp activities"
-        ]
-      },
-      {
-        name: "VIP Private Safari",
-        features: [
-          "Your own private 4x4 vehicle",
-          "Direct hotel pickup & drop-off",
-          "Personalised dune driving experience",
-          "Private sunset stops for photography",
-          "Premium desert dining or private camp experience"
-        ]
-      }
-    ]
   },
   {
     id: 'yacht-rentals',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Check } from 'lucide-react';
 import { useNavigation } from '../context/NavigationContext';
 import { servicesData } from '../data/servicesData';
@@ -15,8 +15,11 @@ export const ServiceDetail: React.FC = () => {
     setActiveTab(0);
   }, [selectedServiceId]);
 
+
+
   // If no service found, or not on detail page, technically shouldn't happen due to parent logic
   if (!service) return null;
+
 
   return (
     <div className="bg-luxury-black min-h-screen text-white pt-20 animate-fade-in-up">
@@ -65,8 +68,30 @@ export const ServiceDetail: React.FC = () => {
                 ))}
               </div>
 
-              {/* Packages Section */}
-              {service.packages && service.packages.length > 0 && (
+              {/* Price Section */}
+              {service.price && service.price.trim() !== '' && (
+                <div className="mt-8 pt-8 border-t border-white/10">
+                  <p className="text-luxury-gold font-serif text-lg md:text-xl">{service.price}</p>
+                </div>
+              )}
+            </Reveal>
+
+            {/* GetYourGuide Widget (Desert Safari only) */}
+            {service.id === 'desert-safari' && (
+              <div className="mt-12 mb-12">
+                <h3 className="text-white font-serif text-2xl md:text-3xl mb-8">Check availability</h3>
+                <div 
+                  className="w-full"
+                  dangerouslySetInnerHTML={{
+                    __html: `<div data-gyg-href="https://widget.getyourguide.com/default/availability.frame" data-gyg-tour-id="128547" data-gyg-locale-code="en-US" data-gyg-currency="EUR" data-gyg-widget="availability" data-gyg-variant="horizontal" data-gyg-partner-id="05E1XCJ"><span>Powered by <a target="_blank" rel="sponsored" href="https://www.getyourguide.com/dubai-l173/">GetYourGuide</a></span></div>`
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Packages Section (other services) */}
+            {service.id !== 'desert-safari' && service.packages && service.packages.length > 0 && (
+              <Reveal delay={400}>
                 <div className="mt-12">
                   <h3 className="text-white font-serif text-2xl md:text-3xl mb-8">Packages</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -85,15 +110,8 @@ export const ServiceDetail: React.FC = () => {
                     ))}
                   </div>
                 </div>
-              )}
-
-              {/* Price Section */}
-              {service.price && service.price.trim() !== '' && (
-                <div className="mt-8 pt-8 border-t border-white/10">
-                  <p className="text-luxury-gold font-serif text-lg md:text-xl">{service.price}</p>
-                </div>
-              )}
-            </Reveal>
+              </Reveal>
+            )}
           </div>
         </div>
       </div>
