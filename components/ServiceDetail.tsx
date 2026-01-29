@@ -78,15 +78,17 @@ export const ServiceDetail: React.FC = () => {
 
             {/* GetYourGuide Widget (Desert Safari only) */}
             {service.id === 'desert-safari' && (
-              <div className="mt-12 mb-12">
-                <h3 className="text-white font-serif text-2xl md:text-3xl mb-8">Check availability</h3>
-                <div 
-                  className="w-full"
-                  dangerouslySetInnerHTML={{
-                    __html: `<div data-gyg-href="https://widget.getyourguide.com/default/availability.frame" data-gyg-tour-id="128547" data-gyg-locale-code="en-US" data-gyg-currency="EUR" data-gyg-widget="availability" data-gyg-variant="horizontal" data-gyg-partner-id="05E1XCJ"><span>Powered by <a target="_blank" rel="sponsored" href="https://www.getyourguide.com/dubai-l173/">GetYourGuide</a></span></div>`
-                  }}
-                />
-              </div>
+              <Reveal delay={400}>
+                <div className="mt-12 mb-12">
+                  <h3 className="text-white font-serif text-2xl md:text-3xl mb-8">Book Your Desert Safari Experience</h3>
+                  <div 
+                    className="w-full"
+                    dangerouslySetInnerHTML={{
+                      __html: `<div data-gyg-href="https://widget.getyourguide.com/default/availability.frame" data-gyg-tour-id="128547" data-gyg-locale-code="en-US" data-gyg-currency="EUR" data-gyg-widget="availability" data-gyg-variant="horizontal" data-gyg-partner-id="05E1XCJ"><span>Powered by <a target="_blank" rel="sponsored" href="https://www.getyourguide.com/dubai-l173/">GetYourGuide</a></span></div>`
+                    }}
+                  />
+                </div>
+              </Reveal>
             )}
 
             {/* Packages Section (other services) */}
